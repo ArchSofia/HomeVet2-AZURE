@@ -53,7 +53,7 @@ public class CustomerService {
 
 
 
-    public void createCustomer(CustomerDTO customerDTO) throws MessagingException {
+    public void createCustomer(CustomerDTO customerDTO) {
         customerRepository.findByEmail(customerDTO.getEmail()).ifPresent( c -> {
             throw new BadRequestException("Email already in use");
         });
@@ -62,7 +62,6 @@ public class CustomerService {
         customer.setPassword(encodedPassword);
         Role role = roleService.findById(1L).orElseThrow(() -> new NotFoundException(NOT_FOUND_ROLE));
         customer.setRole(role);
-        sendRegistrationEmail(customer);
         customerRepository.save(customer);
     }
     public void sendRegistrationEmail(Customer customer) throws MessagingException {
